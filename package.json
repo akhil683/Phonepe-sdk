@@ -1,0 +1,28 @@
+{
+  "name": "@pingpong/phonepe-sdk",
+  "version": "1.0.0",
+  "description": "PhonePe SDK for client and server",
+  "keywords": [
+    "PhonePe",
+    "SDK",
+    "Payment",
+    "Gateway"
+  ],
+  "license": "MIT",
+  "author": "akhil",
+  "type": "commonjs",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.13.1",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.9.2",
+    "@types/uuid": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
