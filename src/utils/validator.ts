@@ -216,4 +216,296 @@ export class PhonePeValidation {
 
     return { valid: true, value: cleanUpiId };
   }
+
+  /**
+   * Validate IFSC code
+   *
+   * @param ifscCode - IFSC code to validate
+   * @param options - Validation options
+   * @returns Validation result
+   */
+  static validateIfscCode(
+    ifscCode: string,
+    options: ValidationOptions = {},
+  ): ValidationResult {
+    if (!ifscCode || ifscCode.trim() === "") {
+      if (options.allowEmpty) {
+        return { valid: true, value: "" };
+      }
+      return {
+        valid: false,
+        error: options.messages?.required || "IFSC code is required",
+        field: "ifscCode",
+      };
+    }
+
+    const cleanIfsc = ifscCode.trim().toUpperCase();
+
+    // Check length
+    if (cleanIfsc.length !== VALIDATION_RULES.IFSC_CODE.LENGTH) {
+      return {
+        valid: false,
+        error:
+          options.messages?.invalid || VALIDATION_RULES.IFSC_CODE.ERROR_MESSAGE,
+        field: "ifscCode",
+      };
+    }
+
+    // Check pattern
+    if (!VALIDATION_RULES.IFSC_CODE.PATTERN.test(cleanIfsc)) {
+      return {
+        valid: false,
+        error:
+          options.messages?.invalid || VALIDATION_RULES.IFSC_CODE.ERROR_MESSAGE,
+        field: "ifscCode",
+      };
+    }
+
+    return { valid: true, value: cleanIfsc };
+  }
+
+  /**
+   * Validate bank account number
+   *
+   * @param accountNumber - Account number to validate
+   * @param options - Validation options
+   * @returns Validation result
+   */
+  static validateAccountNumber(
+    accountNumber: string,
+    options: ValidationOptions = {},
+  ): ValidationResult {
+    if (!accountNumber || accountNumber.trim() === "") {
+      if (options.allowEmpty) {
+        return { valid: true, value: "" };
+      }
+      return {
+        valid: false,
+        error: options.messages?.required || "Account number is required",
+        field: "accountNumber",
+      };
+    }
+
+    const cleanAccount = accountNumber.trim();
+
+    // Check pattern (only digits)
+    if (!VALIDATION_RULES.ACCOUNT_NUMBER.PATTERN.test(cleanAccount)) {
+      return {
+        valid: false,
+        error:
+          options.messages?.invalid ||
+          VALIDATION_RULES.ACCOUNT_NUMBER.ERROR_MESSAGE,
+        field: "accountNumber",
+      };
+    }
+
+    // Check length
+    if (
+      cleanAccount.length < VALIDATION_RULES.ACCOUNT_NUMBER.MIN_LENGTH ||
+      cleanAccount.length > VALIDATION_RULES.ACCOUNT_NUMBER.MAX_LENGTH
+    ) {
+      return {
+        valid: false,
+        error:
+          options.messages?.invalid ||
+          VALIDATION_RULES.ACCOUNT_NUMBER.ERROR_MESSAGE,
+        field: "accountNumber",
+      };
+    }
+
+    return { valid: true, value: cleanAccount };
+  }
+
+  /**
+   * Validate merchant order ID
+   *
+   * @param orderId - Order ID to validate
+   * @param options - Validation options
+   * @returns Validation result
+   */
+  static validateMerchantOrderId(
+    orderId: string,
+    options: ValidationOptions = {},
+  ): ValidationResult {
+    if (!orderId || orderId.trim() === "") {
+      if (options.allowEmpty) {
+        return { valid: true, value: "" };
+      }
+      return {
+        valid: false,
+        error: options.messages?.required || "Merchant order ID is required",
+        field: "merchantOrderId",
+      };
+    }
+
+    const cleanOrderId = orderId.trim();
+
+    // Check length
+    if (cleanOrderId.length > VALIDATION_RULES.MERCHANT_ORDER_ID.MAX_LENGTH) {
+      return {
+        valid: false,
+        error: options.messages?.tooLong || "Merchant order ID is too long",
+        field: "merchantOrderId",
+      };
+    }
+
+    // Check pattern (alphanumeric with hyphens and underscores)
+    if (!VALIDATION_RULES.MERCHANT_ORDER_ID.PATTERN.test(cleanOrderId)) {
+      return {
+        valid: false,
+        error:
+          options.messages?.invalid ||
+          VALIDATION_RULES.MERCHANT_ORDER_ID.ERROR_MESSAGE,
+        field: "merchantOrderId",
+      };
+    }
+
+    return { valid: true, value: cleanOrderId };
+  }
+
+  /**
+   * Validate user ID
+   *
+   * @param userId - User ID to validate
+   * @param options - Validation options
+   * @returns Validation result
+   */
+  static validateUserId(
+    userId: string,
+    options: ValidationOptions = {},
+  ): ValidationResult {
+    if (!userId || userId.trim() === "") {
+      if (options.allowEmpty) {
+        return { valid: true, value: "" };
+      }
+      return {
+        valid: false,
+        error: options.messages?.required || "User ID is required",
+        field: "userId",
+      };
+    }
+
+    const cleanUserId = userId.trim();
+
+    // Check length
+    if (
+      cleanUserId.length < VALIDATION_RULES.USER_ID.MIN_LENGTH ||
+      cleanUserId.length > VALIDATION_RULES.USER_ID.MAX_LENGTH
+    ) {
+      return {
+        valid: false,
+        error:
+          options.messages?.invalid || VALIDATION_RULES.USER_ID.ERROR_MESSAGE,
+        field: "userId",
+      };
+    }
+
+    return { valid: true, value: cleanUserId };
+  }
+
+  /**
+   * Validate ISO date string
+   *
+   * @param date - Date string to validate
+   * @param fieldName - Name of the field being validated
+   * @param options - Validation options
+   * @returns Validation result
+   */
+  static validateDate(
+    date: string,
+    fieldName: string = "date",
+    options: ValidationOptions = {},
+  ): ValidationResult {
+    if (!date || date.trim() === "") {
+      if (options.allowEmpty) {
+        return { valid: true, value: "" };
+      }
+      return {
+        valid: false,
+        error: options.messages?.required || `${fieldName} is required`,
+        field: fieldName,
+      };
+    }
+
+    const parsedDate = new Date(date);
+
+    if (isNaN(parsedDate.getTime())) {
+      return {
+        valid: false,
+        error: options.messages?.invalid || `Invalid ${fieldName} format`,
+        field: fieldName,
+      };
+    }
+
+    return { valid: true, value: date };
+  }
+
+  /**
+   * Validate required field
+   *
+   * @param value - Value to check
+   * @param fieldName - Name of the field
+   * @param options - Validation options
+   * @returns Validation result
+   */
+  static validateRequired(
+    value: any,
+    fieldName: string,
+    options: ValidationOptions = {},
+  ): ValidationResult {
+    if (value === undefined || value === null || value === "") {
+      return {
+        valid: false,
+        error: options.messages?.required || `${fieldName} is required`,
+        field: fieldName,
+      };
+    }
+
+    return { valid: true, value };
+  }
+
+  /**
+   * Throw validation error if validation fails
+   * Helper method to simplify validation in code
+   *
+   * @param result - Validation result
+   * @throws PhonePeValidationError if validation fails
+   */
+  static throwIfInvalid(result: ValidationResult): void {
+    if (!result.valid) {
+      throw new PhonePeValidationError(
+        result.error || "Validation failed",
+        result.field,
+      );
+    }
+  }
+
+  /**
+   * Validate multiple fields at once
+   *
+   * @param validations - Array of validation results
+   * @returns Combined validation result
+   * @throws PhonePeValidationError with all errors if any validation fails
+   */
+  static validateAll(validations: ValidationResult[]): ValidationResult {
+    const errors: string[] = [];
+    const fields: string[] = [];
+
+    for (const validation of validations) {
+      if (!validation.valid) {
+        if (validation.error) errors.push(validation.error);
+        if (validation.field) fields.push(validation.field);
+      }
+    }
+
+    if (errors.length > 0) {
+      return {
+        valid: false,
+        error: errors.join("; "),
+        field: fields.join(", "),
+      };
+    }
+
+    return { valid: true };
+  }
 }
